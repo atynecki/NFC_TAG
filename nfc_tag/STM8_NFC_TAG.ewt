@@ -19,7 +19,13 @@
   <group>
     <name>inc</name>
     <file>
+      <name>$PROJ_DIR$\inc\app_manager.h</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\inc\delay.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\inc\hardware_config.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\inc\LCD_driver.h</name>
@@ -124,7 +130,16 @@
   <group>
     <name>src</name>
     <file>
+      <name>$PROJ_DIR$\src\app_manager.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\src\delay.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\src\hardware_config.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\src\it_handlers.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\src\LCD_driver.c</name>

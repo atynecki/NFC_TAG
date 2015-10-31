@@ -1,12 +1,12 @@
 
 #include "delay.h"
 #include "lib_config.h"
-
-#define USE_HSI
+#include "app_manager.h"
 
 void main(void)
-{ 
-
+{
+  clock_init();
+  
 }	
 
 

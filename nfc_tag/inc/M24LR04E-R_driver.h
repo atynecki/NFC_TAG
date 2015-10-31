@@ -15,18 +15,13 @@
 #define M24LR04E_REG_THYS        0x02  /* Temperature Register of LM75 */
 #define M24LR04E_REG_TOS         0x03  /* Over-temp Shutdown threshold Register of LM75 */
 
-
-// I2C address for M24LR16-E Datalogger
-//#define M24LR16_EEPROM_ADDRESS_USER		0xA6 /* I2C DeviceSelect */
-//#define M24LR16_EEPROM_ADDRESS_SYSTEM		0xAE /* I2C DeviceSelect */
-
 void M24LR04E_Init(void);
 void M24LR04E_DeInit(void);
 ErrorStatus M24LR04E_GetStatus(void);
 
-void M24LR04E_ReadOneByte (uint8_t EE_address, uint16_t ReadAddr,uint8_t* pBuffer);
-void M24LR04E_ReadBuffer (uint8_t EE_address, uint16_t ReadAddr, uint8_t NumByteToRead,uint8_t* pBuffer);
-void M24LR04E_WriteOneByte (uint8_t EE_address, uint16_t WriteAddr,uint8_t pBuffer);
+void M24LR04E_ReadOneByte(uint8_t EE_address, uint16_t ReadAddr,uint8_t* pBuffer);
+void M24LR04E_ReadBuffer(uint8_t EE_address, uint16_t ReadAddr, uint8_t NumByteToRead,uint8_t* pBuffer);
+void M24LR04E_WriteOneByte(uint8_t EE_address, uint16_t WriteAddr,uint8_t pBuffer);
 
 uint16_t M24LR04E_ReadTemp(void);
 uint16_t M24LR04E_ReadReg(uint8_t RegName);
@@ -35,7 +30,6 @@ uint8_t M24LR04E_ReadConfReg(void);
 void M24LR04E_WriteConfReg(uint8_t RegValue);
 void M24LR04E_ShutDown(FunctionalState NewState);  
 
+#endif
 
-
-#endif 
 

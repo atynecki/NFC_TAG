@@ -4,7 +4,6 @@
 
 
 #include "stm8l15x_it.h"
-
 typedef void @far (*interrupt_handler_t)(void);
 
 struct interrupt_vector {

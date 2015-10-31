@@ -41,7 +41,7 @@
         </option>
         <option>
           <name>DynDriver</name>
-          <state>STLINK_STM8</state>
+          <state>STICE_STM8</state>
         </option>
         <option>
           <name>CSpyDDFOverride</name>
@@ -151,7 +151,7 @@
         </option>
         <option>
           <name>STiceUseSwim</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>STiceOptionBytesSetupFileOver</name>

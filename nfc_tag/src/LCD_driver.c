@@ -7,7 +7,7 @@ bool KeyPressed = FALSE;
 extern uint8_t state_machine;
 		
 /* LCD BAR status: We don't write directly in LCD RAM for save the bar setting */
-uint8_t t_bar[2]={0x0,0X0};
+uint8_t t_bar[2]={0x0,0x0};
 		
 /*  =========================================================================
                                  LCD MAPPING
@@ -112,7 +112,7 @@ void LCD_contrast()
   /* To get the actual contrast value in register */
   contrast = (LCD_Contrast_TypeDef) (LCD->CR2 & LCD_Contrast_3V3);
   
-  while ((GPIOC->IDR & USER_GPIO_PIN) == 0x0)
+  while ((GPIOC->IDR & BUTTON_GPIO_PIN) == 0x0)
   {
     contrast+=2;	
     if (contrast>LCD_Contrast_3V3)
@@ -417,8 +417,8 @@ void LCD_GLASS_WriteChar(uint8_t* ch, bool point, bool column, uint8_t position)
               break;
   }
 
-/* Refresh LCD  bar */
-	LCD_bar();
+  /* Refresh LCD  bar */
+  LCD_bar();
 }
 
 /**
@@ -518,7 +518,7 @@ void LCD_GLASS_ScrollSentence(uint8_t* ptr, uint16_t nScroll, uint16_t ScrollSpe
   
   if (ptr == 0) return;
 
-/* To calculate end of string */
+  /* To calculate end of string */
   for (ptr1=ptr,Str_size = 0 ; *ptr1 != 0; Str_size++,ptr1++) ;
   
   ptr1 = ptr;
@@ -526,7 +526,7 @@ void LCD_GLASS_ScrollSentence(uint8_t* ptr, uint16_t nScroll, uint16_t ScrollSpe
   LCD_GLASS_DisplayString(ptr);
   delay_ms(ScrollSpeed);
           
-/* To shift the string for scrolling display*/
+  /* To shift the string for scrolling display*/
   for (Repetition=0; Repetition<nScroll; Repetition++)
   {
     for (Char_Nb=0; Char_Nb<Str_size-10; Char_Nb++)
@@ -540,13 +540,12 @@ void LCD_GLASS_ScrollSentence(uint8_t* ptr, uint16_t nScroll, uint16_t ScrollSpe
       LCD_GLASS_Clear();
       LCD_GLASS_DisplayString(str);
   
-  /* user button pressed stop the scrolling sentence */
+      /* user button pressed stop the scrolling sentence */
       if (KeyPressed)
               return;   		
       delay_ms(ScrollSpeed);
     }	
   }
-
 }
 
 /**
@@ -561,7 +560,6 @@ void LCD_GLASS_ScrollSentence(uint8_t* ptr, uint16_t nScroll, uint16_t ScrollSpe
   */
 void LCD_GLASS_ScrollSentenceNbCar(uint8_t* ptr, uint16_t ScrollSpeed,uint8_t NbCar)
 {
-  uint8_t Repetition;
   uint8_t Char_Nb =0;
   uint8_t* ptr1;
   uint8_t str[7]="";
@@ -575,32 +573,29 @@ void LCD_GLASS_ScrollSentenceNbCar(uint8_t* ptr, uint16_t ScrollSpeed,uint8_t Nb
   ptr1 = ptr;
   
   LCD_GLASS_DisplayString(ptr);
-//  delay_ms(ScrollSpeed);
-	delay_10us(ScrollSpeed);
+  //  delay_ms(ScrollSpeed);
+  delay_10us(ScrollSpeed);
           
-/* To shift the string for scrolling display*/
+  /* To shift the string for scrolling display*/
 	
-	//for (Char_Nb=0; Char_Nb<Str_size; Char_Nb++)
-	do{
-		*(str) =* (ptr1+((Char_Nb+1)%Str_size));
-		*(str+1) =* (ptr1+((Char_Nb+2)%Str_size));
-		*(str+2) =* (ptr1+((Char_Nb+3)%Str_size));
-		*(str+3) =* (ptr1+((Char_Nb+4)%Str_size));
-		*(str+4) =* (ptr1+((Char_Nb+5)%Str_size));
-		*(str+5) =* (ptr1+((Char_Nb+6)%Str_size));
-	//	LCD_GLASS_Clear();
-		LCD_GLASS_DisplayString(str);
-		delay_10us(ScrollSpeed);
-	} while (++Char_Nb < Str_size && state_machine == STATE_CHECKNDEFMESSAGE); 
+  //for (Char_Nb=0; Char_Nb<Str_size; Char_Nb++)
+  do {
+    *(str) =* (ptr1+((Char_Nb+1)%Str_size));
+    *(str+1) =* (ptr1+((Char_Nb+2)%Str_size));
+    *(str+2) =* (ptr1+((Char_Nb+3)%Str_size));
+    *(str+3) =* (ptr1+((Char_Nb+4)%Str_size));
+    *(str+4) =* (ptr1+((Char_Nb+5)%Str_size));
+    *(str+5) =* (ptr1+((Char_Nb+6)%Str_size));
+//	LCD_GLASS_Clear();
+    LCD_GLASS_DisplayString(str);
+    delay_10us(ScrollSpeed);
+  } while (++Char_Nb < Str_size && state_machine == STATE_CHECKNDEFMESSAGE); 
 
-/* user button pressed stop the scrolling sentence */
-//      if (KeyPressed)
-//              return;   		
-//     delay_ms(ScrollSpeed);
-		
-	}	
-
-//}
+    /* user button pressed stop the scrolling sentence */
+    //      if (KeyPressed)
+    //              return;   		
+    //     delay_ms(ScrollSpeed);		
+}	
 
 /**
   * @brief  Display a string in scrolling mode
@@ -614,7 +609,6 @@ void LCD_GLASS_ScrollSentenceNbCar(uint8_t* ptr, uint16_t ScrollSpeed,uint8_t Nb
   */
 void LCD_GLASS_ScrollSentenceNbCarLP(uint8_t* ptr, uint8_t NbCar)
 {
-  uint8_t Repetition;
   uint8_t Char_Nb =0;
   uint8_t* ptr1;
   uint8_t str[7]="";
@@ -627,21 +621,18 @@ void LCD_GLASS_ScrollSentenceNbCarLP(uint8_t* ptr, uint8_t NbCar)
   LCD_GLASS_DisplayString(ptr);
 	delay_10us(SCROLL_SPEED_L);
           
-/* To shift the string for scrolling display*/
-	do
-	{
-		*(str) =* (ptr1+((Char_Nb+1)%Str_size));
-		*(str+1) =* (ptr1+((Char_Nb+2)%Str_size));
-		*(str+2) =* (ptr1+((Char_Nb+3)%Str_size));
-		*(str+3) =* (ptr1+((Char_Nb+4)%Str_size));
-		*(str+4) =* (ptr1+((Char_Nb+5)%Str_size));
-		*(str+5) =* (ptr1+((Char_Nb+6)%Str_size));
-	//	LCD_GLASS_Clear();
-		LCD_GLASS_DisplayString(str);
+  /* To shift the string for scrolling display*/
+    do {
+      *(str) =* (ptr1+((Char_Nb+1)%Str_size));
+      *(str+1) =* (ptr1+((Char_Nb+2)%Str_size));
+      *(str+2) =* (ptr1+((Char_Nb+3)%Str_size));
+      *(str+3) =* (ptr1+((Char_Nb+4)%Str_size));
+      *(str+4) =* (ptr1+((Char_Nb+5)%Str_size));
+      *(str+5) =* (ptr1+((Char_Nb+6)%Str_size));
+//	LCD_GLASS_Clear();
+      LCD_GLASS_DisplayString(str);
 
-		delay_10us(SCROLL_SPEED_L);
-	} while (++Char_Nb < Str_size && state_machine == STATE_CHECKNDEFMESSAGE); 
-
+      delay_10us(SCROLL_SPEED_L);
+    } while (++Char_Nb < Str_size && state_machine == STATE_CHECKNDEFMESSAGE); 
 }
 
-/******************* (C) COPYRIGHT 2010 STMicroelectronics *****END OF FILE****/

@@ -24,7 +24,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm8l15x.h"
-#include "vcc_measure.h"
 
 /* Uncomment the line below to enable peripheral header file inclusion */
 /* #include "stm8l15x_adc.h" */

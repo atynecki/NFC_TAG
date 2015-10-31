@@ -258,8 +258,8 @@
         </option>
         <option>
           <name>CCIncludePath2</name>
-          <state>D:\Project\STM8\STM8L15x_StdPeriph_Driver\inc</state>
-          <state>D:\Project\STM8\inc</state>
+          <state>D:\Project\git\NFC_TAG\nfc_tag\inc</state>
+          <state>D:\Project\git\NFC_TAG\nfc_tag\STM8L15x_StdPeriph_Driver\inc</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -1591,7 +1591,13 @@
   <group>
     <name>inc</name>
     <file>
+      <name>$PROJ_DIR$\inc\app_manager.h</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\inc\delay.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\inc\hardware_config.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\inc\LCD_driver.h</name>
@@ -1696,7 +1702,16 @@
   <group>
     <name>src</name>
     <file>
+      <name>$PROJ_DIR$\src\app_manager.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\src\delay.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\src\hardware_config.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\src\it_handlers.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\src\LCD_driver.c</name>

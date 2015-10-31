@@ -12,7 +12,7 @@
 #define LED_GPIO_PIN		GPIO_Pin_6
 
 #define BUTTON_GPIO_PORT	GPIOC
-#define USER_GPIO_PIN		GPIO_Pin_7
+#define BUTTON_GPIO_PIN		GPIO_Pin_7
 
 /*
 #define CTN_GPIO_PORT           GPIOC

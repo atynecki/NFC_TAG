@@ -1,36 +1,14 @@
-/**
-  ******************************************************************************
-  * @file    Project/Template/stm8l15x_it.c
-  * @author  MCD Tools Team
-  * @version V1.2.0
-  * @date    09/2010
-  * @brief   Main Interrupt Service Routines.
-  *          This file provides template for all peripherals interrupt service routine.
-  ******************************************************************************
-  * @copy
-  *
-  * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
-  * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
-  * TIME. AS A RESULT, STMICROELECTRONICS SHALL NOT BE HELD LIABLE FOR ANY
-  * DIRECT, INDIRECT OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
-  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
-  * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
-  *
-  * <h2><center>&copy; COPYRIGHT 2010 STMicroelectronics</center></h2>
-  */ 
 
-/* Includes ------------------------------------------------------------------*/
 #include "stm8l15x.h"
-#include "stm8l15x_it.h"
-#include "discover_functions.h"
-#include "discover_board.h"
-#include "stm8l_discovery_lcd.h"
+#include "lib_config.h"
+//#include "discover_functions.h"
+//#include "stm8l_discovery_lcd.h"
 
 //extern bool KeyPressed;
-extern uint8_t state_machine;
-extern EEPROM uint8_t EEMenuState;
+//extern uint8_t state_machine;
+//extern EEPROM uint8_t EEMenuState;
 //extern bool Auto_test;
-extern uint8_t t_bar[2];
+//extern uint8_t t_bar[2];
 
 /** @addtogroup IT_Functions
   * @{
@@ -274,17 +252,16 @@ INTERRUPT_HANDLER(EXTI5_IRQHandler,13)
   * None
   */
 INTERRUPT_HANDLER(EXTI6_IRQHandler,14)
-{// disableInterrupts();
-  
-  /* To clear External IT Pin6 */
- // EXTI_ClearITPendingBit(EXTI_IT_Pin6);
-  
-//  enableInterrupts();
+{
+/* In order to detect unexpected events during development,
+   it is recommended to set a breakpoint on the following instruction.
+*/
+  while (1);
 
 }
 
 
-	/**
+/**
   * @brief External IT PIN7 Interrupt routine.
   *   On User button pressed:
   *   Check if button presse a long time (4-5 sec.) if yes --> Set Autotest
@@ -299,11 +276,11 @@ INTERRUPT_HANDLER(EXTI7_IRQHandler,15)
 {
   
   /* User button pressed */
-  if ((GPIOC->IDR & USER_GPIO_PIN) == 0x0) 
+  if ((GPIOC->IDR & BUTTON_GPIO_PIN) == 0x0) 
   {
      
   /* To pass to next state*/
-		switch (state_machine)
+ /*		switch (state_machine)
 		{
 			case STATE_VREF: 
 				state_machine = STATE_TEMPMEAS;
@@ -318,12 +295,10 @@ INTERRUPT_HANDLER(EXTI7_IRQHandler,15)
 				state_machine = STATE_VREF;
 			break;
 			
-		}    
+		}  */  
 	}
-  EEMenuState = state_machine;
+  //EEMenuState = state_machine;
   EXTI_ClearITPendingBit(EXTI_IT_Pin7);
-  
-
 }
 /**
   * @brief LCD start of new frame Interrupt routine.
@@ -478,8 +453,7 @@ INTERRUPT_HANDLER(TIM4_UPD_OVF_TRG_IRQHandler,25)
 /* In order to detect unexpected events during development,
    it is recommended to set a breakpoint on the following instruction.
 */
-  
-	while (1);
+  while (1);
 
 }
 /**
@@ -545,8 +519,4 @@ INTERRUPT_HANDLER(I2C1_IRQHandler,29)
   while (1);
 }
 
-/**
-  * @}
-  */
-/******************* (C) COPYRIGHT 2010 STMicroelectronics *****END OF FILE****/
 
