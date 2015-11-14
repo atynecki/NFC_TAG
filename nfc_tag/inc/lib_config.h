@@ -23,7 +23,7 @@
 */
 
 /**
-  * @brief  M24LR16E-R I2C Interface pins
+  * @brief  M24LR16E-R I2C 
   */
 #define M24LR04E_I2C                         I2C1
 #define M24LR04E_I2C_CLK                     CLK_Peripheral_I2C1
@@ -33,7 +33,7 @@
 #define M24LR04E_I2C_SDA_GPIO_PORT           GPIOC                       /* GPIOC */
 
 /**
-  * @brief  temperature sensor STTS751 I2C Interface pins
+  * @brief  temperature sensor STTS751 I2C
   */
 #define STTS751_I2C                         I2C1
 #define STTS751_I2C_CLK                     CLK_Peripheral_I2C1
@@ -41,5 +41,15 @@
 #define STTS751_I2C_SCL_GPIO_PORT           GPIOC                       /* GPIOC */
 #define STTS751_I2C_SDA_PIN                 GPIO_Pin_0                  /* PC.00 */
 #define STTS751_I2C_SDA_GPIO_PORT           GPIOC                       /* GPIOC */
+    
+/**
+  * @brief  I2C device slave
+  */
+#define BOARD_I2C                         I2C1
+#define BOARD_I2C_CLK                     CLK_Peripheral_I2C1
+#define BOARD_I2C_SCL_PIN                 GPIO_Pin_1                  /* PC.01 */
+#define BOARD_I2C_SCL_GPIO_PORT           GPIOC                       /* GPIOC */
+#define BOARD_I2C_SDA_PIN                 GPIO_Pin_0                  /* PC.00 */
+#define BOARD_I2C_SDA_GPIO_PORT           GPIOC                       /* GPIOC */
 
 #endif

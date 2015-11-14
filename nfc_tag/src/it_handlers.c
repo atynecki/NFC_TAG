@@ -1,14 +1,9 @@
 
-#include "stm8l15x.h"
-#include "lib_config.h"
-//#include "discover_functions.h"
-//#include "stm8l_discovery_lcd.h"
+#include "app_manager.h"
 
-//extern bool KeyPressed;
-//extern uint8_t state_machine;
-//extern EEPROM uint8_t EEMenuState;
-//extern bool Auto_test;
-//extern uint8_t t_bar[2];
+__IO uint8_t Slave_Buffer_Rx[5];
+__IO uint8_t Tx_Idx = 0, Rx_Idx = 0;
+I2C_Event_TypeDef event = 0x00;
 
 /** @addtogroup IT_Functions
   * @{
@@ -276,28 +271,23 @@ INTERRUPT_HANDLER(EXTI7_IRQHandler,15)
 {
   
   /* User button pressed */
-  if ((GPIOC->IDR & BUTTON_GPIO_PIN) == 0x0) 
-  {
-     
-  /* To pass to next state*/
- /*		switch (state_machine)
-		{
-			case STATE_VREF: 
-				state_machine = STATE_TEMPMEAS;
-			break;
-			case STATE_TEMPMEAS: 
-				state_machine = STATE_CHECKNDEFMESSAGE;
-			break;
-			case STATE_CHECKNDEFMESSAGE: 
-				state_machine = STATE_VREF;
-			break;
-			default : 
-				state_machine = STATE_VREF;
-			break;
-			
-		}  */  
-	}
-  //EEMenuState = state_machine;
+  if ((GPIOC->IDR & BUTTON_GPIO_PIN) == 0x0) {
+    switch (get_app_config()->app_mode) {
+        case IDLE: 
+                get_app_config()->app_mode = PROGRAM_START;
+                get_app_config()->start_flag = TRUE;
+        break;
+        
+    case PROGRAM_START | SEND_TEXT | PROGRAM_FINISH: 
+                get_app_config()->app_mode = IDLE;
+        break;
+
+        default : 
+                get_app_config()->app_mode = IDLE;
+        break;			
+     }   
+  }
+  
   EXTI_ClearITPendingBit(EXTI_IT_Pin7);
 }
 /**
@@ -513,10 +503,47 @@ INTERRUPT_HANDLER(USART1_RX_IRQHandler,28)
   */
 INTERRUPT_HANDLER(I2C1_IRQHandler,29)
 {
-/* In order to detect unexpected events during development,
-   it is recommended to set a breakpoint on the following instruction.
-*/
-  while (1);
+  /* Read SR2 register to get I2C error */
+  if ((BOARD_I2C->SR2) != 0)
+  {
+    /* Clears SR2 register */
+    BOARD_I2C->SR2 = 0;
+
+   //TODO ob³suga b³êdu
+  }
+  
+  event = I2C_GetLastEvent( BOARD_I2C);
+  switch (event)
+  {
+      /******* Slave transmitter ******/
+      /* check on EV1 */
+    case I2C_EVENT_SLAVE_TRANSMITTER_ADDRESS_MATCHED:
+      break;
+
+      /* check on EV3 */
+    case I2C_EVENT_SLAVE_BYTE_TRANSMITTING:
+      /* Transmit data */
+      I2C_SendData(BOARD_I2C,Slave_Buffer_Rx[Tx_Idx++]);
+      break;
+      /******* Slave receiver **********/
+      /* check on EV1*/
+    case I2C_EVENT_SLAVE_RECEIVER_ADDRESS_MATCHED:
+      break;
+
+      /* Check on EV2*/
+    case I2C_EVENT_SLAVE_BYTE_RECEIVED:
+      text_message_received (I2C_ReceiveData(BOARD_I2C));
+      break;
+
+      /* Check on EV4 */
+    case (I2C_EVENT_SLAVE_STOP_DETECTED):
+      /* write to CR2 to clear STOPF flag */
+      BOARD_I2C->CR2 |= I2C_CR2_ACK;
+      break;
+
+    default:
+      break;
+  }
 }
 
 

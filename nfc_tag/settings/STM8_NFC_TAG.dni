@@ -9,11 +9,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=921117754
-[Log file]
-LoggingEnabled=_ 0
-LogFile=_ ""
-Category=_ 0
+Checksum=1237204425
 [InterruptLog]
 LogEnabled=0
 SumEnabled=0
@@ -40,9 +36,6 @@ UnspecRange=1
 ActionState=1
 [Simulator]
 Freq=16000000
-[Trace1]
-Enabled=0
-ShowSource=1
 [Trace Window]
 Trace Instruction=1
 Trace Interrupt Handler=1
@@ -59,6 +52,25 @@ Trace BEM Event=1
 Trace Discarded=1
 Trace Interrupted=1
 Trace Non Event=1
+[Trace1]
+Enabled=0
+ShowSource=1
+[CallStack]
+ShowArgs=0
+[Disassembly]
+MixedMode=1
+[DataSample]
+LogEnabled=0
+GraphEnabled=0
+ShowTimeLog=1
+ShowTimeSum=1
+[Log file]
+LoggingEnabled=_ 0
+LogFile=_ ""
+Category=_ 0
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
 [Breakpoints]
 Count=0
 [Aliases]

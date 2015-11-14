@@ -1,10 +1,9 @@
 
 #include "LCD_driver.h"
-#include "discover_functions.h"
+#include "app_manager.h"
 
 /* this variable can be used for accelerate the scrolling exit when push user button */
 bool KeyPressed = FALSE; 
-extern uint8_t state_machine;
 		
 /* LCD BAR status: We don't write directly in LCD RAM for save the bar setting */
 uint8_t t_bar[2]={0x0,0x0};
@@ -589,7 +588,7 @@ void LCD_GLASS_ScrollSentenceNbCar(uint8_t* ptr, uint16_t ScrollSpeed,uint8_t Nb
 //	LCD_GLASS_Clear();
     LCD_GLASS_DisplayString(str);
     delay_10us(ScrollSpeed);
-  } while (++Char_Nb < Str_size && state_machine == STATE_CHECKNDEFMESSAGE); 
+  } while (++Char_Nb < Str_size && get_app_config()->app_mode == PROGRAM_START); 
 
     /* user button pressed stop the scrolling sentence */
     //      if (KeyPressed)
@@ -633,6 +632,6 @@ void LCD_GLASS_ScrollSentenceNbCarLP(uint8_t* ptr, uint8_t NbCar)
       LCD_GLASS_DisplayString(str);
 
       delay_10us(SCROLL_SPEED_L);
-    } while (++Char_Nb < Str_size && state_machine == STATE_CHECKNDEFMESSAGE); 
+    } while (++Char_Nb < Str_size && get_app_config()->app_mode == PROGRAM_START); 
 }
 

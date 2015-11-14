@@ -19,6 +19,6 @@
 @REM 
 
 
-"D:\Programs\IAR Systems\Embedded Workbench 7.0\common\bin\cspybat" "D:\Programs\IAR Systems\Embedded Workbench 7.0\stm8\bin\stm8proc.dll" "D:\Programs\IAR Systems\Embedded Workbench 7.0\stm8\bin\stm8stice.dll"  %1 --plugin "D:\Programs\IAR Systems\Embedded Workbench 7.0\stm8\bin\stm8bat.dll" --backend -B "-p" "D:\Programs\IAR Systems\Embedded Workbench 7.0\stm8\config\ddf\iostm8l152c8.ddf" "-d" "stice" "--mcuname" "STM8L152C8" "--swim" 
+"D:\Programs\IAR Systems\Embedded Workbench 7.0\common\bin\cspybat" "D:\Programs\IAR Systems\Embedded Workbench 7.0\stm8\bin\stm8proc.dll" "D:\Programs\IAR Systems\Embedded Workbench 7.0\stm8\bin\stm8stlink.dll"  %1 --plugin "D:\Programs\IAR Systems\Embedded Workbench 7.0\stm8\bin\stm8bat.dll" --backend -B "-p" "D:\Programs\IAR Systems\Embedded Workbench 7.0\stm8\config\ddf\iostm8l152c6.ddf" "-d" "stlink" "--mcuname" "STM8L152C6" 
 
 

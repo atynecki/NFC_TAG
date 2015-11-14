@@ -45,7 +45,14 @@ void clock_all_deinit ()
 
 void GPIO_init () 
 { 
-  
+  /* LED init */
+  GPIO_Init(LED_GPIO_PORT, LED_GPIO_PIN, GPIO_Mode_Out_PP_Low_Fast);
+  // set to 0 
+  GPIO_WriteBit(LED_GPIO_PORT, LED_GPIO_PIN, RESET);
+	
+  /* USER button init */
+  GPIO_Init(BUTTON_GPIO_PORT, BUTTON_GPIO_PIN, GPIO_Mode_In_FL_IT);
+  EXTI_SetPinSensitivity(EXTI_Pin_7, EXTI_Trigger_Falling);
 }
 
 void GPIO_all_deinit ()
@@ -63,4 +70,14 @@ void GPIO_all_deinit ()
     GPIOC->ODR = 0xFF;
     GPIOD->ODR = 0xFF;
     GPIOE->ODR = 0xFF;
+}
+
+void LED_set ()
+{
+   GPIO_WriteBit(LED_GPIO_PORT, LED_GPIO_PIN, SET);
+}
+
+void LED_reset ()
+{
+   GPIO_WriteBit(LED_GPIO_PORT, LED_GPIO_PIN, RESET);
 }
