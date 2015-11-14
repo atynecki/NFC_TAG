@@ -4,6 +4,10 @@
 app_config_t app_config;
 const uint8_t ProgramMessage[PROGRAM_TEXT_LEN]={'P','R','O','G','R','A','M','M','I','N','G',' ','S','T','A','R','T'};
 
+uint8_t header[HEADER_TEXT_LEN] = {0};
+uint8_t sign_counter;
+uint8_t counter;
+
 app_config_p get_app_config () 
 {
   return &app_config;
@@ -75,7 +79,6 @@ void temperature_get_display ()
   temperature_display(temp_value);
 }
 
-
 static void I2C_reconfig ()
 {
   CLK_PeripheralClockConfig(BOARD_I2C_CLK, ENABLE);
@@ -84,7 +87,7 @@ static void I2C_reconfig ()
   I2C_DeInit(BOARD_I2C);
 
   /* I2C configuration */
-   I2C_Init(BOARD_I2C, 100000, BOARD_I2C_ADDRESS, I2C_Mode_SMBusDevice,
+   I2C_Init(BOARD_I2C, 100000, BOARD_I2C_ADDRESS<<1, I2C_Mode_SMBusDevice,
             I2C_DutyCycle_2, I2C_Ack_Enable, I2C_AcknowledgedAddress_7bit);
 
   /* I2C Init */
@@ -93,81 +96,155 @@ static void I2C_reconfig ()
   I2C_ITConfig(BOARD_I2C, (I2C_IT_ERR | I2C_IT_EVT | I2C_IT_BUF), ENABLE);
 }
 
+static void header_buff_clear ()
+{
+  for(counter = 0; counter<4; counter++){
+    header[counter] = 0;
+  }
+}
+
+static void clear_text_message_buff ()
+{
+  uint8_t counter;
+  for(counter = 0; counter<MAX_TEXT_LEN; counter++){
+    get_app_config()->text_message[counter] = 0;
+  }
+}
 void programming_start ()
 {
+  get_app_config()->header_received = 0;
+  get_app_config()->text_message_length = 0;
+  get_app_config()->text_received = 0;
+  header_buff_clear();
+  clear_text_message_buff();
   LED_set();
   I2C_reconfig();
-  get_app_config()->header_received = 0;
 }
 
 static void display_message (uint8_t message[], uint8_t length)
 {
-        //Switch the clock to LSI
-	#ifdef USE_LSE
-		CLK_SYSCLKDivConfig(CLK_SYSCLKDiv_1);
-		CLK_SYSCLKSourceConfig(CLK_SYSCLKSource_LSE);	
-		CLK_SYSCLKSourceSwitchCmd(ENABLE);
-		while (((CLK->SWCR)& 0x01)==0x01);
-		CLK_HSICmd(DISABLE);
-		CLK->ECKCR &= ~0x01; 
-	#else
-		CLK_SYSCLKDivConfig(CLK_SYSCLKDiv_1);
-		CLK_SYSCLKSourceConfig(CLK_SYSCLKSource_LSI);
-		CLK_SYSCLKSourceSwitchCmd(ENABLE);
-		while (((CLK->SWCR)& 0x01)==0x01);
-		CLK_HSICmd(DISABLE);
-		CLK->ECKCR &= ~0x01; 
-	#endif		
-		
-		LCD_GLASS_ScrollSentenceNbCar(message,30,length+6);		
-		
-	#ifdef USE_HSI
-                //Switch the clock to HSI
-                CLK_SYSCLKDivConfig(CLK_SYSCLKDiv_16);
-                CLK_HSICmd(ENABLE);
-                while (((CLK->ICKCR)& 0x02)!=0x02);			
-                CLK_SYSCLKSourceConfig(CLK_SYSCLKSource_HSI);
-                CLK_SYSCLKSourceSwitchCmd(ENABLE);
-                while (((CLK->SWCR)& 0x01)==0x01);
-        #else
-                CLK_SYSCLKDivConfig(CLK_SYSCLKDiv_2);
-                CLK_SYSCLKSourceConfig(CLK_SYSCLKSource_HSE);
-                while (((CLK->SWCR)& 0x01)==0x01);
-                CLK_SYSCLKSourceSwitchCmd(ENABLE);
-        #endif
+    //Switch the clock to LSI
+    #ifdef USE_LSE
+        CLK_SYSCLKDivConfig(CLK_SYSCLKDiv_1);
+        CLK_SYSCLKSourceConfig(CLK_SYSCLKSource_LSE);	
+        CLK_SYSCLKSourceSwitchCmd(ENABLE);
+        while (((CLK->SWCR)& 0x01)==0x01);
+        CLK_HSICmd(DISABLE);
+        CLK->ECKCR &= ~0x01; 
+    #else
+        CLK_SYSCLKDivConfig(CLK_SYSCLKDiv_1);
+        CLK_SYSCLKSourceConfig(CLK_SYSCLKSource_LSI);
+        CLK_SYSCLKSourceSwitchCmd(ENABLE);
+        while (((CLK->SWCR)& 0x01)==0x01);
+        CLK_HSICmd(DISABLE);
+        CLK->ECKCR &= ~0x01; 
+    #endif		
+            
+        LCD_GLASS_ScrollSentenceNbCar(message,30,length+6);		
+            
+    #ifdef USE_HSI
+        //Switch the clock to HSI
+        CLK_SYSCLKDivConfig(CLK_SYSCLKDiv_16);
+        CLK_HSICmd(ENABLE);
+        while (((CLK->ICKCR)& 0x02)!=0x02);			
+        CLK_SYSCLKSourceConfig(CLK_SYSCLKSource_HSI);
+        CLK_SYSCLKSourceSwitchCmd(ENABLE);
+        while (((CLK->SWCR)& 0x01)==0x01);
+    #else
+        CLK_SYSCLKDivConfig(CLK_SYSCLKDiv_2);
+        CLK_SYSCLKSourceConfig(CLK_SYSCLKSource_HSE);
+        while (((CLK->SWCR)& 0x01)==0x01);
+        CLK_SYSCLKSourceSwitchCmd(ENABLE);
+    #endif
 }
 
 void wait_for_text () 
 {
-  display_message((uint8_t*)(ProgramMessage), PROGRAM_TEXT_LEN);
+  if(get_app_config()->text_received == 0)
+    display_message((uint8_t*)(ProgramMessage), PROGRAM_TEXT_LEN);
+  else {
+    get_app_config()->text_received = 0;
+    get_app_config()->app_mode = PROGRAM_FINISH;
+    get_app_config()->start_flag = TRUE;
+  }
 }
 
-uint8_t header [4] = {0};
-uint8_t counter;
-uint8_t sign_counter;
-bool text_message_received (uint8_t sign) 
+void text_message_received (uint8_t sign) 
 {
-  for(counter = 0; counter<3; counter++){
+  for(counter = 0; counter<HEADER_TEXT_LEN-1; counter++){
     header[counter] = header[counter+1];
   }
   
   header[3] = sign;
   
-  if(header[0] == 'A' && header[1] == 'x' && header[2] == 'A' && header[3] == 'z'){
+  if(header[0] == 'A' && header[1] == 'x' && header[2] == 'A' && header[3] == 'x'){
     if(get_app_config()->header_received == 0){
       get_app_config()->header_received = 1;
-      sign_counter = 0;
+      sign_counter = 1;
     }
     else if (get_app_config()->header_received == 1){
        get_app_config()->header_received = 0;
-       get_app_config()-> text_message_length = sign_counter;
-       return TRUE;
+       get_app_config()->text_message[sign_counter++] = 0xFE;
+       get_app_config()->text_message_length += sign_counter;
+       get_app_config()->text_received = 1;
     }
   }
   
   if(get_app_config()->header_received == 1)
     get_app_config()->text_message[sign_counter++] = sign;
-  
-  return FALSE;
 }
- 
+
+static ErrorStatus nfc_ready ()
+{
+  uint8_t read_value = 0x00;
+	
+  // check the E1 at CONFIG1
+  M24LR04E_ReadOneByte (M24LR04E_CONFIG1_ADDRESS, &read_value);	
+  if (read_value != 0xE1)
+          return ERROR;
+  
+  // text or URL flag at CONFIG2
+  M24LR04E_ReadOneByte (M24LR04E_CONFIG2_ADDRESS, &read_value);	
+  if (read_value != 0x54)
+      return ERROR;
+
+  return SUCCESS;	
+}
+
+uint8_t iteration_num = 0;
+uint8_t text_buff[10] = {0};
+ErrorStatus send_text_to_nfc ()
+{
+  uint8_t text_length =  get_app_config()->text_message_length;
+  uint8_t *data_pointer = get_app_config()->text_message;
+  uint16_t text_address = M24LR04E_TEXT_ADDRESS;
+  
+  
+  iteration_num = text_length/4;
+  if(iteration_num%4 !=0)
+    iteration_num+=1;
+  
+  M24LR04E_Init();
+  if(nfc_ready() == SUCCESS){
+    for(counter=0; counter<iteration_num; counter++){
+      M24LR04E_WritePage(text_address, data_pointer);
+      delayLFO_ms (2);
+      text_address+=4;
+      data_pointer+=4;
+    }
+  }
+  else 
+    return ERROR;
+
+  M24LR04E_WriteOneByte(M24LR04E_MESSAGE_LEN_ADDRESS, text_length+1);
+  delayLFO_ms (2);
+  
+  M24LR04E_DeInit();
+  
+  return SUCCESS;
+}
+
+void wait_for_button () 
+{
+  display_message(get_app_config()->text_message, get_app_config()->text_message_length);
+}

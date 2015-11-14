@@ -2,6 +2,11 @@
 #ifndef __LIB_CONFIG_H
 #define __LIB_CONFIG_H
 
+#include "stm8l15x.h"
+#include "stm8l15x_i2c.h"
+
+#define USE_HSI
+
 /* MACROs for SET, RESET or TOGGLE Output port */
 
 #define GPIO_HIGH(a,b) 		a->ODR|=b
@@ -13,14 +18,6 @@
 
 #define BUTTON_GPIO_PORT	GPIOC
 #define BUTTON_GPIO_PIN		GPIO_Pin_7
-
-/*
-#define CTN_GPIO_PORT           GPIOC
-#define CTN_CNTEN_GPIO_PIN      GPIO_Pin_4
-#define WAKEUP_GPIO_PORT        GPIOE
-#define ICC_WAKEUP_GPIO_PIN     GPIO_Pin_6
-#define ICC_WAKEUP_EXTI_PIN     EXTI_Pin_3
-*/
 
 /**
   * @brief  M24LR16E-R I2C 
@@ -51,5 +48,14 @@
 #define BOARD_I2C_SCL_GPIO_PORT           GPIOC                       /* GPIOC */
 #define BOARD_I2C_SDA_PIN                 GPIO_Pin_0                  /* PC.00 */
 #define BOARD_I2C_SDA_GPIO_PORT           GPIOC                       /* GPIOC */
+#define BOARD_I2C_ADDRESS                 0x53
+
+/**
+  * @brief  Text message parameters
+  */
+#define PROGRAM_TEXT_LEN                  17
+#define HEADER_TEXT_LEN                    4
+#define MAX_TEXT_LEN                      40
+
 
 #endif

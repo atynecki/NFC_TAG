@@ -588,7 +588,7 @@ void LCD_GLASS_ScrollSentenceNbCar(uint8_t* ptr, uint16_t ScrollSpeed,uint8_t Nb
 //	LCD_GLASS_Clear();
     LCD_GLASS_DisplayString(str);
     delay_10us(ScrollSpeed);
-  } while (++Char_Nb < Str_size && get_app_config()->app_mode == PROGRAM_START); 
+  } while (++Char_Nb < Str_size /*&& get_app_config()->app_mode == PROGRAM_START*/); 
 
     /* user button pressed stop the scrolling sentence */
     //      if (KeyPressed)

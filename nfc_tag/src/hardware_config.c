@@ -15,33 +15,6 @@ void clock_init ()
           CLK_HSICmd(DISABLE);
   #endif
 }
-  
-void clock_all_deinit ()
-{
-    CLK_PeripheralClockConfig(CLK_Peripheral_TIM2, DISABLE);
-    CLK_PeripheralClockConfig(CLK_Peripheral_TIM3, DISABLE);
-    CLK_PeripheralClockConfig(CLK_Peripheral_TIM4, DISABLE);
-    CLK_PeripheralClockConfig(CLK_Peripheral_I2C1, DISABLE);
-    CLK_PeripheralClockConfig(CLK_Peripheral_SPI1, DISABLE);
-    CLK_PeripheralClockConfig(CLK_Peripheral_USART1, DISABLE);
-    CLK_PeripheralClockConfig(CLK_Peripheral_BEEP, DISABLE);
-    CLK_PeripheralClockConfig(CLK_Peripheral_DAC, DISABLE);
-    CLK_PeripheralClockConfig(CLK_Peripheral_ADC1, DISABLE);
-    CLK_PeripheralClockConfig(CLK_Peripheral_TIM1, DISABLE);
-    CLK_PeripheralClockConfig(CLK_Peripheral_RTC, DISABLE);
-    CLK_PeripheralClockConfig(CLK_Peripheral_LCD, DISABLE);
-    CLK_PeripheralClockConfig(CLK_Peripheral_ADC1, DISABLE);
-    CLK_PeripheralClockConfig(CLK_Peripheral_DMA1, DISABLE);
-    CLK_PeripheralClockConfig(CLK_Peripheral_ADC1, DISABLE);
-    CLK_PeripheralClockConfig(CLK_Peripheral_BOOTROM, DISABLE);
-    CLK_PeripheralClockConfig(CLK_Peripheral_AES, DISABLE);
-    CLK_PeripheralClockConfig(CLK_Peripheral_ADC1, DISABLE);
-    CLK_PeripheralClockConfig(CLK_Peripheral_TIM5, DISABLE);
-    CLK_PeripheralClockConfig(CLK_Peripheral_SPI2, DISABLE);
-    CLK_PeripheralClockConfig(CLK_Peripheral_USART2, DISABLE);
-    CLK_PeripheralClockConfig(CLK_Peripheral_USART3, DISABLE);
-    CLK_PeripheralClockConfig(CLK_Peripheral_CSSLSE, DISABLE);
-}
 
 void GPIO_init () 
 { 

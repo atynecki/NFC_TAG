@@ -2,7 +2,6 @@
 #ifndef __LCD_H
 #define __LCD_H
 
-#include "stm8l15x.h"
 #include "lib_config.h"
    
 /* Define for scrolling sentences*/
