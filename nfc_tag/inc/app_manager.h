@@ -11,10 +11,9 @@ typedef struct {
   uint8_t app_mode;
   uint8_t temperature;
   uint8_t start_flag;
-  uint8_t text_message[MAX_TEXT_LEN+2];
+  uint8_t text_message[MAX_TEXT_LEN+DISPLAY_TEXT_BREAK_LEN];
   uint8_t text_message_length;
-  uint8_t header_received;
-  uint8_t text_received;
+  uint8_t text_message_stop;
 } app_config_t, *app_config_p;
 
 typedef enum {
@@ -29,12 +28,9 @@ void termometer_init(void);
 void temperature_get_display(void);
 
 void programming_start(void);
-void wait_for_text(void); 
-
-void text_message_received(uint8_t sign);
-
-ErrorStatus send_text_to_nfc(void);
+void read_text_message(void);
 void wait_for_button(void); 
+ErrorStatus read_text_from_nfc(void);
 
 app_config_p get_app_config(void); 
 

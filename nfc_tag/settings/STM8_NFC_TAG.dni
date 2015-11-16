@@ -9,7 +9,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=758406778
+Checksum=-1003590600
 [InterruptLog]
 LogEnabled=0
 SumEnabled=0

@@ -54,7 +54,8 @@
   * @brief  Text message parameters
   */
 #define PROGRAM_TEXT_LEN                  19
-#define HEADER_TEXT_LEN                    4
+#define READ_TEXT_LEN                     18      
+#define DISPLAY_TEXT_BREAK_LEN             3
 #define MAX_TEXT_LEN                      40
 
 

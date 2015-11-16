@@ -3,9 +3,7 @@
 
 app_config_t app_config;
 const uint8_t ProgramMessage[PROGRAM_TEXT_LEN]={'P','R','O','G','R','A','M','M','I','N','G',' ','S','T','A','R','T',' ',' '};
-
-uint8_t header[HEADER_TEXT_LEN] = {0};
-uint8_t sign_counter;
+const uint8_t ReadMessage[READ_TEXT_LEN]={'N','F','C',' ','R','E','A','D',' ','T','E','X','T',0};
 uint8_t counter;
 
 app_config_p get_app_config () 
@@ -81,44 +79,19 @@ void temperature_get_display ()
 
 static void I2C_reconfig ()
 {
-  CLK_PeripheralClockConfig(BOARD_I2C_CLK, ENABLE);
-
-  /* I2C DeInit */
-  I2C_DeInit(BOARD_I2C);
-
-  /* I2C configuration */
-   I2C_Init(BOARD_I2C, 100000, BOARD_I2C_ADDRESS, I2C_Mode_SMBusDevice,
-            I2C_DutyCycle_2, I2C_Ack_Enable, I2C_AcknowledgedAddress_7bit);
-
-  /* I2C Init */
-  I2C_Cmd(BOARD_I2C, ENABLE);
+    /* I2C Init */
+  I2C_Cmd(BOARD_I2C, DISABLE);
   
-  I2C_ITConfig(BOARD_I2C, (I2C_IT_ERR | I2C_IT_EVT | I2C_IT_BUF), ENABLE);
+    /* I2C DeInit */
+  I2C_DeInit(BOARD_I2C);
+  
+  CLK_PeripheralClockConfig(BOARD_I2C_CLK, DISABLE);
 }
 
-static void header_buff_clear ()
-{
-  for(counter = 0; counter<4; counter++){
-    header[counter] = 0;
-  }
-}
-
-static void clear_text_message_buff ()
-{
-  uint8_t counter;
-  for(counter = 0; counter<MAX_TEXT_LEN; counter++){
-    get_app_config()->text_message[counter] = 0;
-  }
-}
 void programming_start ()
 {
-  get_app_config()->header_received = 0;
-  get_app_config()->text_message_length = 0;
-  get_app_config()->text_received = 0;
-  header_buff_clear();
-  clear_text_message_buff();
-  LED_set();
   I2C_reconfig();
+  LED_set();
 }
 
 static void display_message (uint8_t message[], uint8_t length)
@@ -140,7 +113,7 @@ static void display_message (uint8_t message[], uint8_t length)
         CLK->ECKCR &= ~0x01; 
     #endif		
             
-        LCD_GLASS_ScrollSentenceNbCar(message,30,length);		
+    LCD_GLASS_ScrollSentenceNbCar(message,40,length);		
             
     #ifdef USE_HSI
         //Switch the clock to HSI
@@ -158,40 +131,32 @@ static void display_message (uint8_t message[], uint8_t length)
     #endif
 }
 
-void wait_for_text () 
+void read_text_message ()
 {
-  if(get_app_config()->text_received == 0)
-    display_message((uint8_t*)(ProgramMessage), PROGRAM_TEXT_LEN);
-  else {
-    get_app_config()->text_received = 0;
-    get_app_config()->app_mode = PROGRAM_FINISH;
-    get_app_config()->start_flag = TRUE;
-  }
+  get_app_config()->text_message_stop = 0;
+  display_message((uint8_t*)(ReadMessage), READ_TEXT_LEN);
 }
 
-void text_message_received (uint8_t sign) 
+void wait_for_button () 
 {
-  for(counter = 0; counter<HEADER_TEXT_LEN-1; counter++){
-    header[counter] = header[counter+1];
+  get_app_config()->text_message_stop = 0;
+  if(get_app_config()->app_mode == PROGRAM_START)
+    display_message((uint8_t*)(ProgramMessage), PROGRAM_TEXT_LEN);
+  else if(get_app_config()->app_mode == PROGRAM_FINISH){
+    display_message(get_app_config()->text_message, get_app_config()->text_message_length);
   }
-  
-  header[3] = sign;
-  
-  if(header[0] == 'A' && header[1] == 'x' && header[2] == 'A' && header[3] == 'x'){
-    if(get_app_config()->header_received == 0){
-      get_app_config()->header_received = 1;
-      sign_counter = 1;
-    }
-    else if (get_app_config()->header_received == 1){
-       get_app_config()->header_received = 0;
-       get_app_config()->text_message[sign_counter++] = 0xFE;
-       get_app_config()->text_message_length += sign_counter;
-       get_app_config()->text_received = 1;
-    }
+  else {
+     LCD_GLASS_Clear();
+     LCD_GLASS_DisplayString("Error");
+  }  
+}
+
+static void clear_text_message_buff ()
+{
+  uint8_t counter;
+  for(counter = 0; counter<MAX_TEXT_LEN; counter++){
+    get_app_config()->text_message[counter] = 0;
   }
-  
-  if(get_app_config()->header_received == 1)
-    get_app_config()->text_message[sign_counter++] = sign;
 }
 
 static ErrorStatus nfc_ready ()
@@ -211,40 +176,50 @@ static ErrorStatus nfc_ready ()
   return SUCCESS;	
 }
 
-uint8_t iteration_num = 0;
-uint8_t text_buff[10] = {0};
-ErrorStatus send_text_to_nfc ()
+uint8_t tmp;
+static ErrorStatus get_message_length ()
 {
-  uint8_t text_length =  get_app_config()->text_message_length;
-  uint8_t *data_pointer = get_app_config()->text_message;
-  uint16_t text_address = M24LR04E_TEXT_ADDRESS;
-  
-  
-  iteration_num = text_length/4;
-  if(iteration_num%4 !=0)
-    iteration_num+=1;
-  
-  M24LR04E_Init();
-  if(nfc_ready() == SUCCESS){
-    for(counter=0; counter<iteration_num; counter++){
-      M24LR04E_WritePage(text_address, data_pointer);
-      delayLFO_ms (2);
-      text_address+=4;
-      data_pointer+=4;
+  M24LR04E_ReadOneByte(M24LR04E_MESSAGE_LEN_ADDRESS, &get_app_config()->text_message_length);
+  if (get_app_config()->text_message_length == 0x00)
+      return ERROR;
+		
+  return SUCCESS;	
+}
+
+static void ToUpperCase (uint8_t buffer_length ,uint8_t *buffer)
+{
+    uint8_t i;
+  for (i=0;i<buffer_length;i++) {
+    if (buffer[i] >= 0x61 && buffer[i] <= 0x7A){
+          buffer[i] -=32;
     }
   }
-  else 
-    return ERROR;
+}
 
-  M24LR04E_WriteOneByte(M24LR04E_MESSAGE_LEN_ADDRESS, text_length+1);
-  delayLFO_ms (2);
+ErrorStatus read_text_from_nfc ()
+{ 
+  get_app_config()->text_message_length = 0;
+  clear_text_message_buff();
+  
+  M24LR04E_Init();
+  
+  if(nfc_ready() == SUCCESS){
+    if(get_message_length () == SUCCESS) {
+      M24LR04E_ReadBuffer(M24LR04E_TEXT_ADDRESS,get_app_config()->text_message_length, get_app_config()->text_message);
+    }
+    else {
+      M24LR04E_DeInit();
+      return ERROR;
+    }
+  }
+  else {
+    M24LR04E_DeInit();
+    return ERROR;
+  }
   
   M24LR04E_DeInit();
   
+  ToUpperCase(get_app_config()->text_message_length, get_app_config()->text_message);
+  
   return SUCCESS;
-}
-
-void wait_for_button () 
-{
-  display_message(get_app_config()->text_message, get_app_config()->text_message_length);
 }

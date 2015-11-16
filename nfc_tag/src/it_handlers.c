@@ -274,9 +274,16 @@ INTERRUPT_HANDLER(EXTI7_IRQHandler,15)
                 get_app_config()->start_flag = TRUE;
         break;
         
-    case PROGRAM_START | PROGRAM_FINISH: 
+        case PROGRAM_START: 
+                get_app_config()->app_mode = PROGRAM_FINISH;
+                get_app_config()->start_flag = TRUE;
+                get_app_config()->text_message_stop = 1;
+        break;
+        
+        case PROGRAM_FINISH: 
                 get_app_config()->app_mode = IDLE;
                 get_app_config()->start_flag = TRUE;
+                get_app_config()->text_message_stop = 1;
         break;
 
         default : 
@@ -492,10 +499,6 @@ INTERRUPT_HANDLER(USART1_RX_IRQHandler,28)
 
 }
 
-
-uint8_t connection_notify = 0xA5;
-I2C_Event_TypeDef event = 0x00;
-
 /**
   * @brief I2C1 Interrupt routine.
   * @par Parameters:
@@ -505,44 +508,7 @@ I2C_Event_TypeDef event = 0x00;
   */
 INTERRUPT_HANDLER(I2C1_IRQHandler,29)
 {
-  /* Read SR2 register to get I2C error */
-  if ((BOARD_I2C->SR2) != 0) {
-    /* Clears SR2 register */
-    BOARD_I2C->SR2 = 0;
-
-   //TODO ob³suga b³êdu
-  }
-  
-  event = I2C_GetLastEvent(BOARD_I2C);
-  switch (event) {
-      /******* Slave transmitter ******/
-      /* check on EV1 */
-    case I2C_EVENT_SLAVE_TRANSMITTER_ADDRESS_MATCHED:
-      break;
-      /* check on EV3 */
-    case I2C_EVENT_SLAVE_BYTE_TRANSMITTING:
-      /* Transmit data */
-      //I2C_SendData(BOARD_I2C,connection_notify);
-      break;
-      
-      /******* Slave receiver **********/
-      /* check on EV1*/
-    case I2C_EVENT_SLAVE_RECEIVER_ADDRESS_MATCHED:
-      break;
-      /* Check on EV2*/
-    case I2C_EVENT_SLAVE_BYTE_RECEIVED:
-      text_message_received(I2C_ReceiveData(BOARD_I2C));
-      break;
-      
-      /* Check on EV4 */
-    case (I2C_EVENT_SLAVE_STOP_DETECTED):
-      /* write to CR2 to clear STOPF flag */
-      BOARD_I2C->CR2 |= I2C_CR2_ACK;
-      break;
-
-    default:
-      break;
-  }
+ while (1);
 }
 
 

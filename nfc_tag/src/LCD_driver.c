@@ -565,19 +565,14 @@ void LCD_GLASS_ScrollSentenceNbCar(uint8_t* ptr, uint16_t ScrollSpeed,uint8_t Nb
   uint8_t Str_size= NbCar;
   
   if (ptr == 0) return;
-
-/* To calculate end of string */
-//  for (ptr1=ptr,Str_size = 0 ; *ptr1 != 0; Str_size++,ptr1++) ;
   
   ptr1 = ptr;
   
   LCD_GLASS_DisplayString(ptr);
-  //  delay_ms(ScrollSpeed);
   delay_10us(ScrollSpeed);
           
   /* To shift the string for scrolling display*/
-	
-  //for (Char_Nb=0; Char_Nb<Str_size; Char_Nb++)
+  
   do {
     *(str) =* (ptr1+((Char_Nb+1)%Str_size));
     *(str+1) =* (ptr1+((Char_Nb+2)%Str_size));
@@ -588,12 +583,7 @@ void LCD_GLASS_ScrollSentenceNbCar(uint8_t* ptr, uint16_t ScrollSpeed,uint8_t Nb
 //	LCD_GLASS_Clear();
     LCD_GLASS_DisplayString(str);
     delay_10us(ScrollSpeed);
-  } while (++Char_Nb < Str_size /*&& get_app_config()->app_mode == PROGRAM_START*/); 
-
-    /* user button pressed stop the scrolling sentence */
-    //      if (KeyPressed)
-    //              return;   		
-    //     delay_ms(ScrollSpeed);		
+  } while (++Char_Nb < Str_size && get_app_config()->text_message_stop == 0);		
 }	
 
 /**
@@ -618,7 +608,7 @@ void LCD_GLASS_ScrollSentenceNbCarLP(uint8_t* ptr, uint8_t NbCar)
   ptr1 = ptr;
   
   LCD_GLASS_DisplayString(ptr);
-	delay_10us(SCROLL_SPEED_L);
+  delay_10us(SCROLL_SPEED_L);
           
   /* To shift the string for scrolling display*/
     do {
@@ -632,6 +622,6 @@ void LCD_GLASS_ScrollSentenceNbCarLP(uint8_t* ptr, uint8_t NbCar)
       LCD_GLASS_DisplayString(str);
 
       delay_10us(SCROLL_SPEED_L);
-    } while (++Char_Nb < Str_size && get_app_config()->app_mode == PROGRAM_START); 
+    } while (++Char_Nb < Str_size); 
 }
 
