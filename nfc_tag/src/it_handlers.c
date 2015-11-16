@@ -522,7 +522,7 @@ INTERRUPT_HANDLER(I2C1_IRQHandler,29)
       /* check on EV3 */
     case I2C_EVENT_SLAVE_BYTE_TRANSMITTING:
       /* Transmit data */
-      I2C_SendData(BOARD_I2C,connection_notify);
+      //I2C_SendData(BOARD_I2C,connection_notify);
       break;
       
       /******* Slave receiver **********/

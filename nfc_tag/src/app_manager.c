@@ -2,7 +2,7 @@
 #include "app_manager.h"
 
 app_config_t app_config;
-const uint8_t ProgramMessage[PROGRAM_TEXT_LEN]={'P','R','O','G','R','A','M','M','I','N','G',' ','S','T','A','R','T'};
+const uint8_t ProgramMessage[PROGRAM_TEXT_LEN]={'P','R','O','G','R','A','M','M','I','N','G',' ','S','T','A','R','T',' ',' '};
 
 uint8_t header[HEADER_TEXT_LEN] = {0};
 uint8_t sign_counter;
@@ -87,7 +87,7 @@ static void I2C_reconfig ()
   I2C_DeInit(BOARD_I2C);
 
   /* I2C configuration */
-   I2C_Init(BOARD_I2C, 100000, BOARD_I2C_ADDRESS<<1, I2C_Mode_SMBusDevice,
+   I2C_Init(BOARD_I2C, 100000, BOARD_I2C_ADDRESS, I2C_Mode_SMBusDevice,
             I2C_DutyCycle_2, I2C_Ack_Enable, I2C_AcknowledgedAddress_7bit);
 
   /* I2C Init */
@@ -140,7 +140,7 @@ static void display_message (uint8_t message[], uint8_t length)
         CLK->ECKCR &= ~0x01; 
     #endif		
             
-        LCD_GLASS_ScrollSentenceNbCar(message,30,length+6);		
+        LCD_GLASS_ScrollSentenceNbCar(message,30,length);		
             
     #ifdef USE_HSI
         //Switch the clock to HSI

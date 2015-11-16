@@ -12,7 +12,7 @@ void main(void)
   
   enableInterrupts();
   
-  get_app_config()->app_mode = PROGRAM_FINISH;
+  get_app_config()->app_mode = IDLE;
   get_app_config()->start_flag = TRUE;
   
   get_app_config()->text_message[0] = 0;

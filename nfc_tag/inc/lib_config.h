@@ -48,12 +48,12 @@
 #define BOARD_I2C_SCL_GPIO_PORT           GPIOC                       /* GPIOC */
 #define BOARD_I2C_SDA_PIN                 GPIO_Pin_0                  /* PC.00 */
 #define BOARD_I2C_SDA_GPIO_PORT           GPIOC                       /* GPIOC */
-#define BOARD_I2C_ADDRESS                 0x53
+#define BOARD_I2C_ADDRESS                 0x51
 
 /**
   * @brief  Text message parameters
   */
-#define PROGRAM_TEXT_LEN                  17
+#define PROGRAM_TEXT_LEN                  19
 #define HEADER_TEXT_LEN                    4
 #define MAX_TEXT_LEN                      40
 
