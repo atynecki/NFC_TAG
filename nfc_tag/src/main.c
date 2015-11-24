@@ -1,7 +1,6 @@
 
 #include "app_manager.h"
 
-#define text "Artur"
 void main(void)
 {
   clock_init();
@@ -24,7 +23,6 @@ void main(void)
           LED_reset();
         }
         temperature_get_display();
-        delayLFO_ms (1);
       break;
      
       case PROGRAM_START:
@@ -43,10 +41,8 @@ void main(void)
             get_app_config()->app_mode = 0xFF;
             break;
           }
-          else{
+          else
             read_text_message();
-            delayLFO_ms (10);
-          }
         }
         wait_for_button();
       break;

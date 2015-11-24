@@ -54,3 +54,8 @@ void LED_reset ()
 {
    GPIO_WriteBit(LED_GPIO_PORT, LED_GPIO_PIN, RESET);
 }
+
+void LED_toggle ()
+{
+  GPIO_ToggleBits(LED_GPIO_PORT, LED_GPIO_PIN);
+}

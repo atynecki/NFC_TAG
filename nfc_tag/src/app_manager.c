@@ -3,7 +3,7 @@
 
 app_config_t app_config;
 const uint8_t ProgramMessage[PROGRAM_TEXT_LEN]={'P','R','O','G','R','A','M','M','I','N','G',' ','S','T','A','R','T',' ',' '};
-const uint8_t ReadMessage[READ_TEXT_LEN]={'N','F','C',' ','R','E','A','D',' ','T','E','X','T',0};
+const uint8_t ReadMessage[READ_TEXT_LEN]={'N','F','C',' ','R','E','A','D',' ','T','E','X','T',' ',' ',' '};
 uint8_t counter;
 
 app_config_p get_app_config () 
@@ -94,7 +94,7 @@ void programming_start ()
   LED_set();
 }
 
-static void display_message (uint8_t message[], uint8_t length)
+static void display_message (uint8_t message[], uint8_t length, bool ones)
 {
     //Switch the clock to LSI
     #ifdef USE_LSE
@@ -113,7 +113,10 @@ static void display_message (uint8_t message[], uint8_t length)
         CLK->ECKCR &= ~0x01; 
     #endif		
             
-    LCD_GLASS_ScrollSentenceNbCar(message,40,length);		
+    if(ones == TRUE)
+       LCD_GLASS_ScrollSentenceOnes(message,60,length);
+    else
+      LCD_GLASS_ScrollSentenceNbCar(message,50,length);		
             
     #ifdef USE_HSI
         //Switch the clock to HSI
@@ -133,21 +136,30 @@ static void display_message (uint8_t message[], uint8_t length)
 
 void read_text_message ()
 {
+  LCD_GLASS_Clear();
+  delayLFO_ms(2);
   get_app_config()->text_message_stop = 0;
-  display_message((uint8_t*)(ReadMessage), READ_TEXT_LEN);
+  display_message((uint8_t*)(ReadMessage), READ_TEXT_LEN, TRUE);
+  LCD_GLASS_Clear();
+  delayLFO_ms(3);
 }
 
 void wait_for_button () 
 {
   get_app_config()->text_message_stop = 0;
   if(get_app_config()->app_mode == PROGRAM_START)
-    display_message((uint8_t*)(ProgramMessage), PROGRAM_TEXT_LEN);
+    display_message((uint8_t*)(ProgramMessage),PROGRAM_TEXT_LEN,FALSE);
   else if(get_app_config()->app_mode == PROGRAM_FINISH){
-    display_message(get_app_config()->text_message, get_app_config()->text_message_length);
+    LED_toggle();
+    display_message(get_app_config()->text_message, get_app_config()->text_message_length,FALSE);
+    LED_toggle();
+    delayLFO_ms(2);
   }
   else {
      LCD_GLASS_Clear();
      LCD_GLASS_DisplayString("Error");
+     while(get_app_config()->app_mode == 0xFF) {
+     }
   }  
 }
 

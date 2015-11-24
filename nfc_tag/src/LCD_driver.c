@@ -507,56 +507,6 @@ void LCD_GLASS_Clear(void)
   * @par    Required preconditions: The LCD should be cleared before to start the
   *         write operation.
   */
-void LCD_GLASS_ScrollSentence(uint8_t* ptr, uint16_t nScroll, uint16_t ScrollSpeed)
-{
-  uint8_t Repetition;
-  uint8_t Char_Nb;
-  uint8_t* ptr1;
-  uint8_t str[7]="";
-  uint8_t Str_size;
-  
-  if (ptr == 0) return;
-
-  /* To calculate end of string */
-  for (ptr1=ptr,Str_size = 0 ; *ptr1 != 0; Str_size++,ptr1++) ;
-  
-  ptr1 = ptr;
-  
-  LCD_GLASS_DisplayString(ptr);
-  delay_ms(ScrollSpeed);
-          
-  /* To shift the string for scrolling display*/
-  for (Repetition=0; Repetition<nScroll; Repetition++)
-  {
-    for (Char_Nb=0; Char_Nb<Str_size-10; Char_Nb++)
-    {
-      *(str) =* (ptr1+((Char_Nb+1)%Str_size));
-      *(str+1) =* (ptr1+((Char_Nb+2)%Str_size));
-      *(str+2) =* (ptr1+((Char_Nb+3)%Str_size));
-      *(str+3) =* (ptr1+((Char_Nb+4)%Str_size));
-      *(str+4) =* (ptr1+((Char_Nb+5)%Str_size));
-      *(str+5) =* (ptr1+((Char_Nb+6)%Str_size));
-      LCD_GLASS_Clear();
-      LCD_GLASS_DisplayString(str);
-  
-      /* user button pressed stop the scrolling sentence */
-      if (KeyPressed)
-              return;   		
-      delay_ms(ScrollSpeed);
-    }	
-  }
-}
-
-/**
-  * @brief  Display a string in scrolling mode
-  * @param  ptr: Pointer to string to display on the LCD Glass.
-  * @param  nScroll: Specifies how many time the message will be scrolled
-  * @param  ScrollSpeed : Speciifes the speed of the scroll, low value gives
-  *         higher speed 
-  * @retval None
-  * @par    Required preconditions: The LCD should be cleared before to start the
-  *         write operation.
-  */
 void LCD_GLASS_ScrollSentenceNbCar(uint8_t* ptr, uint16_t ScrollSpeed,uint8_t NbCar)
 {
   uint8_t Char_Nb =0;
@@ -580,11 +530,50 @@ void LCD_GLASS_ScrollSentenceNbCar(uint8_t* ptr, uint16_t ScrollSpeed,uint8_t Nb
     *(str+3) =* (ptr1+((Char_Nb+4)%Str_size));
     *(str+4) =* (ptr1+((Char_Nb+5)%Str_size));
     *(str+5) =* (ptr1+((Char_Nb+6)%Str_size));
-//	LCD_GLASS_Clear();
+
     LCD_GLASS_DisplayString(str);
     delay_10us(ScrollSpeed);
+    
   } while (++Char_Nb < Str_size && get_app_config()->text_message_stop == 0);		
-}	
+}
+
+/**
+  * @brief  Display a string in scrolling mode one time
+  * @param  ptr: Pointer to string to display on the LCD Glass.
+  * @param  ScrollSpeed : Speciifes the speed of the scroll, low value gives
+  *         higher speed 
+  * @param  NbCar: number of characters in string
+  * @retval None
+  */
+void LCD_GLASS_ScrollSentenceOnes(uint8_t* ptr, uint16_t ScrollSpeed,uint8_t NbCar)
+{
+  uint8_t Char_Nb =0;
+  uint8_t* ptr1;
+  uint8_t str[7]="";
+  uint8_t Str_size= NbCar;
+  
+  if (ptr == 0) return;
+  
+  ptr1 = ptr;
+  
+  LCD_GLASS_DisplayString(ptr);
+  delay_10us(ScrollSpeed);
+          
+  /* To shift the string for scrolling display*/
+  
+  do {
+    *(str) =* (ptr1+((Char_Nb+1)%Str_size));
+    *(str+1) =* (ptr1+((Char_Nb+2)%Str_size));
+    *(str+2) =* (ptr1+((Char_Nb+3)%Str_size));
+    *(str+3) =* (ptr1+((Char_Nb+4)%Str_size));
+    *(str+4) =* (ptr1+((Char_Nb+5)%Str_size));
+    *(str+5) =* (ptr1+((Char_Nb+6)%Str_size));
+
+    LCD_GLASS_DisplayString(str);
+    delay_10us(ScrollSpeed);
+    
+  } while (++Char_Nb < (Str_size-6) && get_app_config()->text_message_stop == 0);		
+}
 
 /**
   * @brief  Display a string in scrolling mode
