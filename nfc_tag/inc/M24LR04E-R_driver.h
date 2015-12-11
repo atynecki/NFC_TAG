@@ -11,10 +11,9 @@
 #define M24LR04E_CONFIG1_ADDRESS         0x0000
 #define M24LR04E_MESSAGE_LEN_ADDRESS     0x0008
 #define M24LR04E_CONFIG2_ADDRESS         0x0009
-#define M24LR04E_TEXT_ADDRESS            0x000C  
+#define M24LR04E_TEXT_ADDRESS            0x000D  
 
 #define M24LR04E_PAGE_SIZE                    4
-
 
 void M24LR04E_Init(void);
 void M24LR04E_DeInit(void);

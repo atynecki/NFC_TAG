@@ -14,7 +14,7 @@ void TS_Init () {
   I2C_DeInit(STTS751_I2C);
 
   /* I2C configuration */
-   I2C_Init(STTS751_I2C, STTS751_I2C_SPEED, 0x00, I2C_Mode_I2C,
+  I2C_Init(STTS751_I2C, STTS751_I2C_SPEED, 0x00, I2C_Mode_I2C,
             I2C_DutyCycle_2, I2C_Ack_Enable, I2C_AcknowledgedAddress_7bit);
 
   /* I2C Init */

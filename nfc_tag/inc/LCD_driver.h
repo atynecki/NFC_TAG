@@ -52,10 +52,10 @@ void LCD_GLASS_DisplayString(uint8_t* ptr);
 void LCD_GLASS_DisplayStrDeci(uint16_t* ptr);
 void LCD_GLASS_ClearChar(uint8_t position);
 void LCD_GLASS_Clear(void);
-void LCD_GLASS_ScrollSentence(uint8_t* ptr, uint16_t nScroll, uint16_t ScrollSpeed);
 void LCD_GLASS_ScrollSentenceNbCar(uint8_t* ptr, uint16_t ScrollSpeed,uint8_t NbCar);
 void LCD_GLASS_WriteTime(char a, uint8_t posi, bool column);
 void LCD_GLASS_ScrollSentenceNbCarLP(uint8_t* ptr, uint8_t NbCar);
+void LCD_GLASS_ScrollSentenceOnes(uint8_t* ptr, uint16_t ScrollSpeed,uint8_t NbCar);
 
 #endif
 
