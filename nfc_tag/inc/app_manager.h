@@ -1,3 +1,4 @@
+
 #ifndef __APP_MANAGER_H
 #define __APP_MANAGER_H
 
@@ -22,6 +23,7 @@ typedef enum {
   PROGRAM_FINISH
 } mode;
 
+app_config_p get_app_config(void); 
 
 void LED_display_init(void);
 void termometer_init(void);
@@ -32,6 +34,6 @@ void read_text_message(void);
 void wait_for_button(void); 
 ErrorStatus read_text_from_nfc(void);
 
-app_config_p get_app_config(void); 
+void app_error_handler(void); 
 
 #endif

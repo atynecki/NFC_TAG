@@ -30,14 +30,12 @@ void GPIO_init ()
 
 void GPIO_all_deinit ()
 {
-    //GPIO_Mode_In_PU_No_IT
     GPIO_Init( GPIOA, GPIO_Pin_All, GPIO_Mode_Out_OD_Low_Fast);
     GPIO_Init( GPIOB, GPIO_Pin_All, GPIO_Mode_Out_OD_Low_Fast);
     GPIO_Init( GPIOC, GPIO_Pin_2 | GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_5 |\
                GPIO_Pin_5 | GPIO_Pin_6 |GPIO_Pin_7, GPIO_Mode_Out_OD_Low_Fast);
     GPIO_Init( GPIOD, GPIO_Pin_All, GPIO_Mode_Out_OD_Low_Fast);
     GPIO_Init( GPIOE, GPIO_Pin_All, GPIO_Mode_Out_OD_Low_Fast);
-    // Set all the GPIO state to 1
     GPIOA->ODR = 0xFF;
     GPIOB->ODR = 0xFF;
     GPIOC->ODR = 0xFF;

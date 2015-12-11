@@ -1635,6 +1635,9 @@
     <file>
       <name>$PROJ_DIR$\STM8L15x_StdPeriph_Driver\src\stm8l15x_syscfg.c</name>
     </file>
+    <file>
+      <name>$PROJ_DIR$\STM8L15x_StdPeriph_Driver\src\stm8l15x_wwdg.c</name>
+    </file>
   </group>
   <group>
     <name>src</name>
